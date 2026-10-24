@@ -146,8 +146,7 @@ JOB_SPEC = [
     ("interview_city", "面试城市", "text", None),
     ("current_industry", "现从事行业", "combo", ["", "无", "通信/电信/网络设备", "IT/互联网",
                                               "计算机硬件及网络设备", "电子/半导体", "制造业", "其他"]),
-    ("current_job", "现从事职业", "combo", ["", "无", "学生", "工程师", "技术员",
-                                          "软件工程师", "测试工程师", "其他"]),
+    ("current_job", "现从事职业", "combo", ["", "无", "学生", "工程师", "技术员", "销售", "会计"]),
     ("current_city", "现工作城市", "combo", ["", "无", "北京", "上海", "广州", "深圳", "杭州", "成都"]),
     ("current_salary", "现月薪(税前)", "combo", ["", "无", "3000以下", "3000-5000", "5000-8000",
                                               "8000-12000", "12000以上"]),
@@ -555,7 +554,8 @@ class App(tk.Tk):
         ttk.Label(row, text="页面地址", font=FONT).pack(side="left")
         self.var_url = tk.StringVar(value=self.settings.get("url", ""))
         ttk.Entry(row, textvariable=self.var_url, font=FONT).pack(side="left", fill="x", expand=True, padx=6)
-        ttk.Button(row, text="打开浏览器", command=self.open_browser).pack(side="left")
+        self.btn_open_browser = ttk.Button(row, text="打开浏览器", command=self.open_browser)
+        self.btn_open_browser.pack(side="left")
         ttk.Button(row, text="关闭浏览器", command=self.close_browser).pack(side="left", padx=(6, 0))
         ttk.Label(top, text="把你的网申地址粘进来。北森系站点常见后缀：zhiye.com / italent.cn / beisen.com。",
                   font=FONT_S, foreground="#64748b").pack(fill="x", pady=(4, 0))
@@ -622,6 +622,18 @@ class App(tk.Tk):
         ttk.Button(bar, text="📁 打开规则文件", command=lambda: self.open_path(RULES_PATH)).pack(side="left", padx=8)
         ttk.Label(bar, text="数据只存在本机 profile.json 里，不上传任何地方",
                   font=FONT_S, foreground="#64748b").pack(side="right")
+
+        if not getattr(filler, "HAS_WS", True):
+            self.log("[!] 这台电脑没装 websockets 库：『复制脚本』照样能用，"
+                     "但『让软件自己开浏览器』会用不了。")
+            self.log("[!] 想补上：双击文件夹里的『检查环境.cmd』，它会帮你装。")
+            for w in ("btn_fill", "btn_dry", "btn_scan", "btn_connect", "btn_open_browser"):
+                b = getattr(self, w, None)
+                if b is not None:
+                    try:
+                        b.configure(state="disabled")
+                    except Exception:
+                        pass
 
     # ---- 日志 ----
     def _drain(self):
@@ -974,8 +986,29 @@ class App(tk.Tk):
 
 
 def main():
-    app = App()
-    app.mainloop()
+    try:
+        app = App()
+        app.mainloop()
+    except Exception:
+        tb = traceback.format_exc()
+        try:
+            (HERE / "error.log").write_text(tb, encoding="utf-8")
+        except Exception:
+            pass
+        tail = tb.strip().splitlines()[-6:]
+        msg = ("软件启动失败。\n\n" + "\n".join(tail) +
+               "\n\n完整信息已写入：\n" + str(HERE / "error.log") +
+               "\n\n常见原因：\n"
+               "· 没装 Python 3.9+（去 python.org 下载，安装时勾 Add python.exe to PATH）\n"
+               "· 缺少 websockets 库：在文件夹里双击『检查环境.cmd』，它会帮你装")
+        try:
+            r = tk.Tk()
+            r.withdraw()
+            messagebox.showerror("网申简历填写助手 · 启动失败", msg)
+            r.destroy()
+        except Exception:
+            print(msg)
+        raise
 
 
 if __name__ == "__main__":
