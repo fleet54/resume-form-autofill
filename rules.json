@@ -1,0 +1,1509 @@
+{
+  "_doc": [
+    "字段匹配规则。规则按顺序优先（同分先出现者胜）。",
+    "keys：标签关键词（越长越具体，命中越强）",
+    "path：从 profile.json 取值，支持 education.0.major 这种数组下标",
+    "list + field：多行经历，按 DOM 顺序依次消费数组元素（简历里只有 1 段教育经历，第 2 行会自动标『需人工』）",
+    "format：date（2023-09 → 2023.09 或 2023-09-01，看控件类型）、digits、year",
+    "aliases：下拉/单选选项文案与简历值的映射",
+    "not：命中这些词就放弃该规则（避免把『紧急联系人电话』填成自己的手机号）",
+    "alt：内容超出控件 maxlength 时改用的备用字段"
+  ],
+  "rules": [
+    {
+      "id": "name",
+      "keys": [
+        "姓名",
+        "真实姓名",
+        "中文姓名",
+        "申请人姓名",
+        "名字"
+      ],
+      "path": "basic.name",
+      "not": [
+        "联系人",
+        "紧急",
+        "导师",
+        "证明人",
+        "推荐人",
+        "父亲",
+        "母亲",
+        "配偶",
+        "项目"
+      ]
+    },
+    {
+      "id": "gender",
+      "keys": [
+        "性别"
+      ],
+      "path": "basic.gender",
+      "aliases": {
+        "男": [
+          "男",
+          "男性",
+          "male",
+          "M"
+        ],
+        "女": [
+          "女",
+          "女性",
+          "female",
+          "F"
+        ]
+      }
+    },
+    {
+      "id": "birth_year",
+      "keys": [
+        "出生年份",
+        "出生年",
+        "生年"
+      ],
+      "path": "basic.birth_date",
+      "format": "year"
+    },
+    {
+      "id": "birthday",
+      "keys": [
+        "出生日期",
+        "出生年月",
+        "生日",
+        "出生时间",
+        "出生年月日"
+      ],
+      "path": "basic.birth_date",
+      "format": "date"
+    },
+    {
+      "id": "age",
+      "keys": [
+        "年龄"
+      ],
+      "path": "basic.age"
+    },
+    {
+      "id": "idcard",
+      "keys": [
+        "身份证号码",
+        "身份证号",
+        "身份证",
+        "证件号码",
+        "证件号"
+      ],
+      "path": "basic.id_card",
+      "not": [
+        "学号",
+        "工号",
+        "银行卡",
+        "社保"
+      ]
+    },
+    {
+      "id": "ethnicity",
+      "keys": [
+        "民族"
+      ],
+      "path": "basic.ethnicity"
+    },
+    {
+      "id": "political",
+      "keys": [
+        "政治面貌",
+        "政治情况"
+      ],
+      "path": "basic.political_status",
+      "aliases": {
+        "共青团员": [
+          "共青团员",
+          "团员",
+          "中国共产主义青年团团员",
+          "中国共青团团员"
+        ]
+      }
+    },
+    {
+      "id": "hukou_type",
+      "keys": [
+        "户口性质",
+        "户口类型",
+        "户籍性质",
+        "户口类别"
+      ],
+      "path": "basic.hukou_type"
+    },
+    {
+      "id": "native_place",
+      "keys": [
+        "籍贯",
+        "生源地",
+        "出生地",
+        "祖籍"
+      ],
+      "path": "basic.native_place"
+    },
+    {
+      "id": "household",
+      "keys": [
+        "户口所在地",
+        "户籍所在地",
+        "户籍地址",
+        "户口所在城市",
+        "户口所在省份"
+      ],
+      "path": "basic.household_register"
+    },
+    {
+      "id": "marital",
+      "keys": [
+        "婚姻状况",
+        "婚否",
+        "婚姻"
+      ],
+      "path": "basic.marital_status"
+    },
+    {
+      "id": "phone",
+      "keys": [
+        "手机号码",
+        "手机号",
+        "手机",
+        "移动电话",
+        "联系电话",
+        "联系电话号",
+        "电话",
+        "联系方式"
+      ],
+      "path": "basic.phone",
+      "format": "digits",
+      "not": [
+        "紧急",
+        "家庭",
+        "固定",
+        "座机",
+        "学校",
+        "单位",
+        "传真",
+        "宿舍",
+        "父母",
+        "介绍人",
+        "证明人",
+        "亲属"
+      ]
+    },
+    {
+      "id": "qq",
+      "keys": [
+        "QQ",
+        "QQ号",
+        "QQ号码",
+        "QQ账号"
+      ],
+      "path": "basic.qq",
+      "format": "digits"
+    },
+    {
+      "id": "email",
+      "keys": [
+        "电子邮箱",
+        "邮箱地址",
+        "邮箱",
+        "电子邮件",
+        "email",
+        "e-mail",
+        "邮件"
+      ],
+      "path": "basic.email",
+      "not": [
+        "学校",
+        "企业"
+      ]
+    },
+    {
+      "id": "address",
+      "keys": [
+        "通讯地址",
+        "现居住地址",
+        "家庭住址",
+        "详细地址",
+        "住址",
+        "地址",
+        "通讯地址详细"
+      ],
+      "path": "basic.address",
+      "not": [
+        "邮箱",
+        "邮编",
+        "邮寄"
+      ]
+    },
+    {
+      "id": "postcode",
+      "keys": [
+        "邮政编码",
+        "邮编"
+      ],
+      "path": "basic.postcode"
+    },
+    {
+      "id": "current_city",
+      "keys": [
+        "现居住地",
+        "现居地",
+        "目前所在城市",
+        "现居城市",
+        "所在城市",
+        "所在地",
+        "当前城市"
+      ],
+      "path": "basic.current_city"
+    },
+    {
+      "id": "rank",
+      "keys": [
+        "专业排名",
+        "成绩排名",
+        "年级排名",
+        "排名"
+      ],
+      "path": "education.0.rank"
+    },
+    {
+      "id": "gpa",
+      "keys": [
+        "平均学分绩点",
+        "gpa",
+        "绩点",
+        "平均分",
+        "平均成绩"
+      ],
+      "path": "education.0.gpa"
+    },
+    {
+      "id": "school",
+      "keys": [
+        "毕业院校",
+        "毕业学校",
+        "院校名称",
+        "学校名称",
+        "就读院校",
+        "所在院校",
+        "学校"
+      ],
+      "list": "education",
+      "field": "school",
+      "section": "教育|学历|学习|院校|学校"
+    },
+    {
+      "id": "college",
+      "keys": [
+        "所在学院",
+        "学院名称",
+        "院系",
+        "学院",
+        "系别"
+      ],
+      "path": "education.0.college"
+    },
+    {
+      "id": "major",
+      "keys": [
+        "专业名称",
+        "所学专业",
+        "就读专业",
+        "专业"
+      ],
+      "path": "education.0.major",
+      "not": [
+        "第二专业",
+        "辅修",
+        "专业排名",
+        "专业技能",
+        "描述",
+        "说明",
+        "介绍"
+      ],
+      "section": "教育|学历|学习|院校|学校"
+    },
+    {
+      "id": "major_desc",
+      "keys": [
+        "专业描述",
+        "专业说明",
+        "专业介绍",
+        "主修课程",
+        "主要课程"
+      ],
+      "path": "education.0.courses",
+      "_note": "「专业描述」是专业/课程说明，不是专业名称"
+    },
+    {
+      "id": "degree",
+      "keys": [
+        "培养层次",
+        "学历"
+      ],
+      "path": "education.0.degree",
+      "aliases": {
+        "本科": [
+          "本科",
+          "大学本科",
+          "统招本科",
+          "本科（学士）"
+        ]
+      },
+      "section": "教育|学历|学习|院校|学校"
+    },
+    {
+      "id": "degree_award",
+      "keys": [
+        "学位"
+      ],
+      "path": "education.0.degree_award",
+      "aliases": {
+        "学士": [
+          "学士",
+          "学士学位",
+          "本科"
+        ]
+      },
+      "section": "教育|学历|学习|院校|学校"
+    },
+    {
+      "id": "study_form",
+      "keys": [
+        "学习形式",
+        "培养方式",
+        "办学形式",
+        "招生方式"
+      ],
+      "path": "education.0.study_form",
+      "aliases": {
+        "全日制": [
+          "全日制",
+          "普通全日制",
+          "统招"
+        ]
+      }
+    },
+    {
+      "id": "edu_start",
+      "keys": [
+        "入学时间",
+        "入学年月",
+        "入学日期",
+        "开始时间",
+        "起始时间",
+        "开始日期",
+        "入学"
+      ],
+      "path": "education.0.start_date",
+      "format": "date",
+      "section": "教育|学历|学习|院校|学校"
+    },
+    {
+      "id": "edu_end",
+      "keys": [
+        "预计毕业时间",
+        "毕业时间",
+        "毕业年月",
+        "毕业日期",
+        "结束时间",
+        "截止时间",
+        "结束日期",
+        "毕业"
+      ],
+      "path": "education.0.end_date",
+      "format": "date",
+      "section": "教育|学历|学习|院校|学校",
+      "not": [
+        "至今",
+        "目前在",
+        "仍在"
+      ]
+    },
+    {
+      "id": "edu_years",
+      "keys": [
+        "学制"
+      ],
+      "path": "education.0.duration_years",
+      "section": "教育|学历|学习|院校|学校"
+    },
+    {
+      "id": "target_position",
+      "keys": [
+        "应聘岗位",
+        "应聘职位",
+        "申请职位",
+        "申请岗位",
+        "求职意向",
+        "意向岗位",
+        "期望职位",
+        "期望岗位"
+      ],
+      "path": "job.target_position",
+      "aliases": {
+        "软件工程师": [
+          "软件工程师",
+          "软件开发工程师",
+          "研发工程师",
+          "后端开发工程师",
+          "技术类"
+        ]
+      }
+    },
+    {
+      "id": "job_category",
+      "keys": [
+        "岗位类别",
+        "职位类别",
+        "职位大类",
+        "岗位大类"
+      ],
+      "path": "job.job_category"
+    },
+    {
+      "id": "expected_city",
+      "keys": [
+        "期望工作地点",
+        "期望工作城市",
+        "期望城市",
+        "意向城市",
+        "期望工作地",
+        "希望工作地点",
+        "工作地点",
+        "期望从事城市",
+        "意向工作城市",
+        "期望工作地区"
+      ],
+      "path": "job.expected_city"
+    },
+    {
+      "id": "expected_salary",
+      "keys": [
+        "期望薪资",
+        "期望月薪",
+        "薪资要求",
+        "期望待遇",
+        "期望年薪",
+        "期望薪酬",
+        "薪酬期望",
+        "期望月薪(税前)",
+        "薪酬要求"
+      ],
+      "path": "job.expected_salary",
+      "aliases": {
+        "面议": [
+          "面议",
+          "不限",
+          "6000-8000",
+          "8000-10000",
+          "10000-15000"
+        ]
+      }
+    },
+    {
+      "id": "arrival",
+      "keys": [
+        "到岗时间",
+        "可到岗时间(选项版)",
+        "最快到岗",
+        "最快到岗时间",
+        "入职时间"
+      ],
+      "path": "job.arrival",
+      "aliases": {
+        "面议": [
+          "面议",
+          "随时",
+          "一周内",
+          "一个月内",
+          "三个月内",
+          "三个月以上"
+        ]
+      }
+    },
+    {
+      "id": "available_date",
+      "keys": [
+        "可到岗时间",
+        "最快到岗",
+        "可实习时间",
+        "入职日期",
+        "可入职日期"
+      ],
+      "path": "job.available_date",
+      "aliases": {
+        "2027-07": [
+          "2027 年 7 月",
+          "2027年7月",
+          "2027-07",
+          "2027.07",
+          "2027 年 07 月"
+        ]
+      }
+    },
+    {
+      "id": "adjustment",
+      "keys": [
+        "服从分配",
+        "是否服从调剂",
+        "服从调剂",
+        "接受调剂",
+        "是否接受调剂"
+      ],
+      "path": "job.accept_adjustment",
+      "aliases": {
+        "是": [
+          "是",
+          "接受",
+          "服从",
+          "同意",
+          "愿意"
+        ]
+      }
+    },
+    {
+      "id": "recruit_type",
+      "keys": [
+        "招聘类型",
+        "应聘类型",
+        "求职类型"
+      ],
+      "path": "job.recruit_type"
+    },
+    {
+      "id": "graduate_year",
+      "keys": [
+        "毕业年份",
+        "毕业年度",
+        "届别"
+      ],
+      "path": "job.graduate_year"
+    },
+    {
+      "id": "cet6",
+      "keys": [
+        "英语六级",
+        "六级成绩",
+        "cet-6",
+        "cet6"
+      ],
+      "path": "language.cet6"
+    },
+    {
+      "id": "language_level",
+      "keys": [
+        "外语水平",
+        "英语水平",
+        "外语等级",
+        "英语等级",
+        "外语能力",
+        "cet",
+        "四六级"
+      ],
+      "path": "language.cet"
+    },
+    {
+      "id": "mandarin",
+      "keys": [
+        "普通话"
+      ],
+      "path": "language.mandarin",
+      "aliases": {
+        "普通话一级乙等": [
+          "一级乙等",
+          "一级",
+          "普通话一级乙等"
+        ]
+      }
+    },
+    {
+      "id": "computer_level",
+      "keys": [
+        "计算机水平",
+        "计算机能力",
+        "计算机等级",
+        "办公软件"
+      ],
+      "path": "computer_skills.office"
+    },
+    {
+      "id": "skills",
+      "keys": [
+        "专业技能",
+        "技能特长",
+        "掌握技能",
+        "技能",
+        "特长",
+        "专业能力"
+      ],
+      "path": "computer_skills.programming",
+      "not": [
+        "技能证书"
+      ]
+    },
+    {
+      "id": "certificates",
+      "keys": [
+        "技能证书",
+        "资格证书",
+        "获得证书",
+        "证书名称",
+        "证书"
+      ],
+      "path": "certificates",
+      "join": "、"
+    },
+    {
+      "id": "awards",
+      "keys": [
+        "获奖情况",
+        "所获奖励",
+        "荣誉奖项",
+        "获奖经历",
+        "奖励情况",
+        "荣誉"
+      ],
+      "path": "awards",
+      "join": "；"
+    },
+    {
+      "id": "self_eval",
+      "keys": [
+        "自我评价",
+        "自我介绍",
+        "个人评价",
+        "个人简介",
+        "自我描述",
+        "个人陈述",
+        "自荐信",
+        "评价内容",
+        "自我评价内容"
+      ],
+      "path": "self_evaluation",
+      "alt": "self_evaluation_short"
+    },
+    {
+      "id": "strengths",
+      "keys": [
+        "个人优势",
+        "胜任能力",
+        "能力优势",
+        "优势"
+      ],
+      "path": "strengths"
+    },
+    {
+      "id": "career_plan",
+      "keys": [
+        "职业规划",
+        "职业目标",
+        "发展规划"
+      ],
+      "path": "career_plan"
+    },
+    {
+      "id": "intern_company",
+      "keys": [
+        "实习单位",
+        "实习公司",
+        "工作单位",
+        "单位名称",
+        "公司名称",
+        "任职单位",
+        "公司",
+        "企业名称",
+        "任职公司"
+      ],
+      "list": "internships",
+      "field": "company",
+      "section": "工作|实习|任职|职业|单位|公司"
+    },
+    {
+      "id": "intern_position",
+      "keys": [
+        "实习岗位",
+        "实习职位",
+        "实习职务",
+        "职位名称",
+        "岗位名称",
+        "职务",
+        "担任职位",
+        "职位"
+      ],
+      "list": "internships",
+      "field": "position",
+      "section": "工作|实习|任职|职业|单位|公司"
+    },
+    {
+      "id": "intern_start",
+      "keys": [
+        "实习开始时间",
+        "实习起始",
+        "开始时间",
+        "起始时间",
+        "开始日期",
+        "入职时间"
+      ],
+      "list": "internships",
+      "field": "start_date",
+      "format": "date",
+      "section": "工作|实习|任职|职业|单位|公司"
+    },
+    {
+      "id": "intern_end",
+      "keys": [
+        "实习结束时间",
+        "实习截止",
+        "结束时间",
+        "截止时间",
+        "结束日期",
+        "离职时间"
+      ],
+      "list": "internships",
+      "field": "end_date",
+      "format": "date",
+      "section": "工作|实习|任职|职业|单位|公司",
+      "not": [
+        "至今",
+        "目前在",
+        "仍在"
+      ]
+    },
+    {
+      "id": "intern_current",
+      "keys": [
+        "至今",
+        "目前仍在职",
+        "仍在职",
+        "至今在职"
+      ],
+      "path": "internships.0.current",
+      "unsure": true,
+      "note": "「至今」勾选框：如果这段经历到目前还没结束才勾，我按结束日期判断不替你勾",
+      "section": "工作|实习|任职|职业|单位|公司"
+    },
+    {
+      "id": "intern_desc",
+      "keys": [
+        "实习内容",
+        "实习经历描述",
+        "工作内容",
+        "实习职责",
+        "工作职责",
+        "岗位职责",
+        "职责描述",
+        "工作描述",
+        "主要职责",
+        "主要工作内容",
+        "工作业绩",
+        "职责业绩",
+        "主要工作"
+      ],
+      "list": "internships",
+      "field": "description",
+      "section": "工作|实习|任职|职业|单位|公司"
+    },
+    {
+      "id": "project_name",
+      "keys": [
+        "项目名称",
+        "项目名",
+        "科研项目名称"
+      ],
+      "list": "projects",
+      "field": "name",
+      "section": "项目|作品|课题|科研"
+    },
+    {
+      "id": "project_role",
+      "keys": [
+        "项目角色",
+        "担任角色",
+        "项目职务",
+        "承担工作"
+      ],
+      "list": "projects",
+      "field": "role",
+      "section": "项目|作品|课题|科研"
+    },
+    {
+      "id": "project_desc",
+      "keys": [
+        "项目描述",
+        "项目内容",
+        "项目职责",
+        "项目简介",
+        "项目介绍"
+      ],
+      "list": "projects",
+      "field": "description",
+      "section": "项目|作品|课题|科研"
+    },
+    {
+      "id": "project_start",
+      "keys": [
+        "项目开始时间",
+        "开始时间",
+        "起始时间",
+        "开始日期"
+      ],
+      "list": "projects",
+      "field": "start_date",
+      "format": "date",
+      "section": "项目|作品|课题|科研"
+    },
+    {
+      "id": "project_end",
+      "keys": [
+        "项目结束时间",
+        "结束时间",
+        "截止时间",
+        "结束日期"
+      ],
+      "list": "projects",
+      "field": "end_date",
+      "format": "date",
+      "section": "项目|作品|课题|科研",
+      "not": [
+        "至今",
+        "目前在",
+        "仍在"
+      ]
+    },
+    {
+      "id": "courses",
+      "keys": [
+        "主修课程",
+        "主要课程",
+        "专业课程",
+        "所学课程",
+        "核心课程"
+      ],
+      "path": "education.0.courses",
+      "join": "、"
+    },
+    {
+      "id": "cet4",
+      "keys": [
+        "英语四级",
+        "四级成绩",
+        "cet-4",
+        "cet4",
+        "大学英语四级"
+      ],
+      "path": "language.cet4"
+    },
+    {
+      "id": "intern_department",
+      "keys": [
+        "实习部门",
+        "所在部门",
+        "部门名称",
+        "所属部门"
+      ],
+      "list": "internships",
+      "field": "department",
+      "section": "工作|实习|任职|职业|单位|公司"
+    },
+    {
+      "id": "project_achievement",
+      "keys": [
+        "项目成果",
+        "项目业绩",
+        "成果描述",
+        "项目产出"
+      ],
+      "list": "projects",
+      "field": "achievement",
+      "section": "项目|作品|课题|科研"
+    },
+    {
+      "id": "competition_name",
+      "keys": [
+        "竞赛名称",
+        "比赛名称",
+        "赛事名称",
+        "竞赛项目",
+        "获奖项目名称"
+      ],
+      "list": "competitions",
+      "field": "name",
+      "section": "奖励|获奖|竞赛|荣誉|奖项|比赛"
+    },
+    {
+      "id": "competition_award",
+      "keys": [
+        "获奖等级",
+        "奖项等级",
+        "获奖级别",
+        "所获奖项",
+        "获奖名次"
+      ],
+      "list": "competitions",
+      "field": "award",
+      "section": "奖励|获奖|竞赛|荣誉|奖项|比赛"
+    },
+    {
+      "id": "competition_time",
+      "keys": [
+        "获奖时间",
+        "获奖年月",
+        "比赛时间"
+      ],
+      "list": "competitions",
+      "field": "start_date",
+      "format": "date",
+      "section": "奖励|获奖|竞赛|荣誉|奖项|比赛"
+    },
+    {
+      "id": "competition_desc",
+      "keys": [
+        "竞赛描述",
+        "比赛简介",
+        "竞赛内容"
+      ],
+      "list": "competitions",
+      "field": "description",
+      "section": "奖励|获奖|竞赛|荣誉|奖项|比赛"
+    },
+    {
+      "id": "campus_name",
+      "keys": [
+        "组织名称",
+        "社团名称",
+        "所在组织",
+        "学生组织",
+        "校内活动",
+        "参加的社团",
+        "社团/组织名称"
+      ],
+      "list": "campus",
+      "field": "name",
+      "section": "校园|社团|学生工作|组织|职务|班级|奖励|活动|实践",
+      "aggregate": true,
+      "join": "、"
+    },
+    {
+      "id": "campus_role",
+      "keys": [
+        "担任职务",
+        "学生干部职务",
+        "职务名称",
+        "所任职务",
+        "担任职位",
+        "校内担任职务"
+      ],
+      "list": "campus",
+      "field": "role",
+      "section": "校园|社团|学生工作|组织|职务|班级|奖励|活动|实践",
+      "aggregate": true,
+      "join": "、"
+    },
+    {
+      "id": "campus_start",
+      "keys": [
+        "任职开始时间",
+        "任职起始",
+        "开始时间",
+        "起始时间"
+      ],
+      "list": "campus",
+      "field": "start_date",
+      "format": "date",
+      "section": "校园|社团|学生工作|组织|职务|班级"
+    },
+    {
+      "id": "campus_end",
+      "keys": [
+        "任职结束时间",
+        "任职截止",
+        "结束时间",
+        "截止时间"
+      ],
+      "list": "campus",
+      "field": "end_date",
+      "format": "date",
+      "section": "校园|社团|学生工作|组织|职务|班级",
+      "not": [
+        "至今",
+        "目前在",
+        "仍在"
+      ]
+    },
+    {
+      "id": "campus_exp",
+      "keys": [
+        "校园经历",
+        "社团经历",
+        "学生干部经历",
+        "社会实践"
+      ],
+      "list": "campus",
+      "field": "description",
+      "section": "校园|社团|学生工作|组织|职务|班级"
+    },
+    {
+      "id": "id_type",
+      "keys": [
+        "证件类型",
+        "证件类别",
+        "身份证件类型",
+        "证件种类"
+      ],
+      "path": "basic.id_type"
+    },
+    {
+      "id": "nationality",
+      "keys": [
+        "国籍",
+        "国籍地区",
+        "国家地区"
+      ],
+      "path": "basic.nationality"
+    },
+    {
+      "id": "height",
+      "keys": [
+        "身高"
+      ],
+      "path": "basic.height"
+    },
+    {
+      "id": "weight",
+      "keys": [
+        "体重"
+      ],
+      "path": "basic.weight"
+    },
+    {
+      "id": "wechat",
+      "keys": [
+        "微信号",
+        "微信"
+      ],
+      "path": "basic.wechat"
+    },
+    {
+      "id": "emergency_name",
+      "keys": [
+        "紧急联系人姓名",
+        "紧急联系人"
+      ],
+      "path": "basic.emergency_contact",
+      "not": [
+        "电话",
+        "手机",
+        "关系",
+        "邮箱"
+      ]
+    },
+    {
+      "id": "emergency_phone",
+      "keys": [
+        "紧急联系人电话",
+        "紧急联系人手机",
+        "紧急联系电话",
+        "紧急联系人手机号码"
+      ],
+      "path": "basic.emergency_contact_phone"
+    },
+    {
+      "id": "has_relatives",
+      "keys": [
+        "是否有亲属在本公司",
+        "是否有亲属在本单位",
+        "亲属在本公司",
+        "是否有亲属"
+      ],
+      "path": "basic.has_relatives"
+    },
+    {
+      "id": "is_unified",
+      "keys": [
+        "是否统招",
+        "是否全日制统招",
+        "是否统招统分",
+        "统招"
+      ],
+      "list": "education",
+      "field": "is_unified"
+    },
+    {
+      "id": "school_type",
+      "keys": [
+        "学校类型",
+        "院校类型",
+        "学校类别",
+        "院校类别"
+      ],
+      "list": "education",
+      "field": "school_type"
+    },
+    {
+      "id": "rank_base",
+      "keys": [
+        "排名基数",
+        "专业总人数",
+        "年级总人数",
+        "参与排名人数"
+      ],
+      "list": "education",
+      "field": "rank_base"
+    },
+    {
+      "id": "current_industry",
+      "keys": [
+        "现从事行业",
+        "目前从事行业",
+        "当前从事行业",
+        "现在行业"
+      ],
+      "path": "job.current_industry",
+      "note": "简历里没填就留空（应届生可以空着）"
+    },
+    {
+      "id": "current_job",
+      "keys": [
+        "现从事职业",
+        "现从事职位",
+        "目前职位",
+        "当前职位"
+      ],
+      "path": "job.current_job",
+      "note": "简历里没填就留空（应届生可以空着）"
+    },
+    {
+      "id": "current_work_city",
+      "keys": [
+        "现工作城市",
+        "目前工作城市",
+        "当前工作城市"
+      ],
+      "path": "job.current_city",
+      "note": "简历里没填就留空（应届生可以空着）"
+    },
+    {
+      "id": "current_salary",
+      "keys": [
+        "现月薪",
+        "目前月薪",
+        "当前月薪",
+        "现有月薪"
+      ],
+      "path": "job.current_salary",
+      "note": "简历里没填就留空（应届生可以空着）"
+    },
+    {
+      "id": "expected_industry",
+      "keys": [
+        "期望行业",
+        "意向行业",
+        "期望从事行业",
+        "行业意向"
+      ],
+      "path": "job.expected_industry",
+      "not": [
+        "现从事",
+        "目前从事",
+        "当前从事"
+      ],
+      "aliases": {
+        "通信/电信/网络设备": [
+          "通信/电信/网络设备",
+          "通信",
+          "通信/电信运营、增值服务",
+          "IT/互联网",
+          "电子/半导体"
+        ]
+      }
+    },
+    {
+      "id": "exam_city",
+      "keys": [
+        "笔试城市",
+        "笔试地点",
+        "考试城市"
+      ],
+      "path": "job.exam_city"
+    },
+    {
+      "id": "interview_city",
+      "keys": [
+        "面试城市",
+        "面试地点"
+      ],
+      "path": "job.interview_city"
+    },
+    {
+      "id": "accept_relocation",
+      "keys": [
+        "是否接受外派",
+        "是否服从工作地点调剂",
+        "接受外派"
+      ],
+      "path": "job.accept_relocation"
+    },
+    {
+      "id": "cet_score",
+      "keys": [
+        "六级分数",
+        "英语六级分数",
+        "六级成绩",
+        "cet6分数"
+      ],
+      "path": "language.cet_score"
+    },
+    {
+      "id": "ielts",
+      "keys": [
+        "雅思",
+        "雅思成绩",
+        "ielts"
+      ],
+      "path": "language.ielts"
+    },
+    {
+      "id": "toefl",
+      "keys": [
+        "托福",
+        "托福成绩",
+        "toefl"
+      ],
+      "path": "language.toefl"
+    },
+    {
+      "id": "expected_job",
+      "keys": [
+        "期望从事职业",
+        "期望职业",
+        "意向职业",
+        "期望岗位",
+        "意向岗位",
+        "期望职位"
+      ],
+      "path": "job.target_position"
+    },
+    {
+      "id": "work_years",
+      "keys": [
+        "工作年限",
+        "工作年限要求",
+        "工作经验",
+        "从业年限",
+        "经验年限"
+      ],
+      "path": "job.work_years",
+      "aliases": {
+        "应届毕业生": [
+          "应届毕业生",
+          "应届生",
+          "无工作经验",
+          "无经验",
+          "在校生",
+          "1 年以内"
+        ]
+      }
+    },
+    {
+      "id": "lang_type",
+      "keys": [
+        "语言类型",
+        "语种",
+        "语言种类",
+        "外语语种"
+      ],
+      "path": "language.lang_type",
+      "aliases": {
+        "英语": [
+          "英语",
+          "英文",
+          "English"
+        ]
+      }
+    },
+    {
+      "id": "lang_level",
+      "keys": [
+        "掌握程度",
+        "熟练程度",
+        "语言水平",
+        "掌握情况"
+      ],
+      "path": "language.lang_level",
+      "aliases": {
+        "良好": [
+          "良好",
+          "熟练",
+          "一般",
+          "较好"
+        ]
+      }
+    },
+    {
+      "id": "lang_speak",
+      "keys": [
+        "听说",
+        "听说能力",
+        "口语"
+      ],
+      "path": "language.lang_speak",
+      "aliases": {
+        "良好": [
+          "良好",
+          "熟练",
+          "一般",
+          "较好"
+        ]
+      }
+    },
+    {
+      "id": "lang_read",
+      "keys": [
+        "读写",
+        "读写能力",
+        "阅读写作",
+        "读写的"
+      ],
+      "path": "language.lang_read",
+      "aliases": {
+        "良好": [
+          "良好",
+          "熟练",
+          "一般",
+          "较好"
+        ]
+      }
+    },
+    {
+      "id": "declaration",
+      "keys": [
+        "本人声明",
+        "本人承诺",
+        "诚信承诺",
+        "应聘者声明",
+        "声明",
+        "同意被取消聘用资格"
+      ],
+      "path": "job.declaration",
+      "note": "在软件里把「本人声明」设成『是』才会自动勾选；默认留空，由你自己确认",
+      "aliases": {
+        "是": [
+          "本人声明",
+          "本人承诺",
+          "声明",
+          "同意",
+          "以上所有资料均真实无误"
+        ]
+      }
+    },
+    {
+      "id": "awards_summary",
+      "keys": [
+        "其他奖励",
+        "奖励名称",
+        "奖项名称",
+        "获奖情况",
+        "荣誉称号"
+      ],
+      "path": "awards",
+      "join": "；",
+      "section": "奖励|获奖|荣誉|奖项|比赛",
+      "note": "把「获奖」清单拼成一段"
+    },
+    {
+      "id": "highest_degree",
+      "keys": [
+        "最高学历",
+        "最高学位"
+      ],
+      "path": "education.0.degree"
+    },
+    {
+      "id": "graduate_time",
+      "keys": [
+        "毕业时间",
+        "毕业年月",
+        "预计毕业时间"
+      ],
+      "path": "education.0.end_date",
+      "section": "个人信息|基本信息|教育|学历|学习|院校|学校"
+    },
+    {
+      "id": "first_work",
+      "keys": [
+        "首次工作时间",
+        "首次参加工作时间",
+        "初次工作时间"
+      ],
+      "path": "job.first_work",
+      "unsure": true,
+      "note": "应届生一般留空；有工作经历再填"
+    },
+    {
+      "id": "edu_period_start",
+      "keys": [
+        "就读时间（开始）",
+        "就读时间(开始)",
+        "在读时间（开始）"
+      ],
+      "path": "education.0.start_date",
+      "format": "date",
+      "section": "教育|学历|学习|院校|学校"
+    },
+    {
+      "id": "edu_period_end",
+      "keys": [
+        "就读时间（结束）",
+        "就读时间(结束)",
+        "在读时间（结束）"
+      ],
+      "path": "education.0.end_date",
+      "format": "date",
+      "section": "教育|学历|学习|院校|学校"
+    },
+    {
+      "id": "work_period_start",
+      "keys": [
+        "起止时间（开始）",
+        "起止时间(开始)",
+        "任职时间（开始）"
+      ],
+      "path": "internships.0.start_date",
+      "format": "date",
+      "section": "工作|实习|任职|职业|单位|公司"
+    },
+    {
+      "id": "work_period_end",
+      "keys": [
+        "起止时间（结束）",
+        "起止时间(结束)",
+        "任职时间（结束）"
+      ],
+      "path": "internships.0.end_date",
+      "format": "date",
+      "section": "工作|实习|任职|职业|单位|公司"
+    },
+    {
+      "id": "professional_title",
+      "keys": [
+        "职称",
+        "专业技术职称"
+      ],
+      "path": "job.professional_title",
+      "unsure": true
+    },
+    {
+      "id": "registration",
+      "keys": [
+        "注册资格",
+        "执业资格",
+        "职业资格"
+      ],
+      "path": "job.registration",
+      "unsure": true
+    }
+  ]
+}
