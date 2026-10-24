@@ -1,7 +1,40 @@
 # 网申简历填写助手
 
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776ab?logo=python&logoColor=white)](#环境要求)
+[![Platform](https://img.shields.io/badge/platform-Windows-0078d4)](#环境要求)
+[![Deps](https://img.shields.io/badge/third--party%20deps-1%20optional-brightgreen)](#环境要求)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 > 把简历存进一个本地小软件，到了网申页面粘一段脚本，几十个输入框自动填好。
 > **只填不提交**，填完你自己核对再点「投递」。
+
+## ⚠️ 用之前先确认这两件事
+
+这个软件是 **Python 脚本**，不是 exe —— 电脑上必须先有 Python，双击才有反应。
+
+1. **有没有 Python 3.9+？** 没有就先装：<https://www.python.org/downloads/windows/>
+   安装第一页**务必勾选 `Add python.exe to PATH`**。
+2. **装好后先双击 `检查环境.cmd`**：它会逐项检查 Python / tkinter / 依赖 / 浏览器，
+   缺的东西当场能帮你装。全绿了再双击 `启动助手.cmd`。
+
+| 你遇到的情况 | 怎么解决 |
+|---|---|
+| 双击 `启动助手.cmd` **毫无反应** | 没装 Python，或装时没勾 PATH → 看上面第 1 步 |
+| 弹出「软件启动失败」窗口 | 窗口里写了原因；同目录的 `error.log` 有完整堆栈 |
+| 提示缺少 `websockets` | 双击 `检查环境.cmd` 按 `Y` 自动装（不装也能用「复制脚本」这条路） |
+| 想先不装任何东西看看长什么样 | 打开 [docs/fill-demo.png](docs/fill-demo.png) |
+
+详细排查见 [双击没反应 / 打不开怎么办](#双击没反应--打不开怎么办)。
+
+## 环境要求
+
+| 项目 | 要求 | 说明 |
+|---|---|---|
+| 系统 | Windows 10 / 11 | 只在 Windows 上实测过；macOS/Linux 大概率可用但没测 |
+| Python | **3.9 或更高** | 必装。Windows 安装包自带 tkinter（界面用） |
+| 浏览器 | Chrome / Edge | **可选**：只有「让软件自己开浏览器」时用到 |
+| `websockets` | 可选 | 只有「让软件自己开浏览器」时用到；缺了「复制脚本」照样能用 |
+| Node.js | 不需要 | 引擎是自包含 JS，粘进浏览器就能跑 |
 
 国内校招/社招的网申系统（北森 Beisen/iTalent、Moka、各类 antd/自绘表单）字段又多又杂：
 姓名、手机、身份证、政治面貌、教育经历、工作经历、项目经历、语言能力…… 每投一家公司就要
