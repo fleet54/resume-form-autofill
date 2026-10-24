@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>2027 届校园招聘 · 简历填写（模拟网申页）</title>
+<style>
+  :root { --line:#e5e7eb; --ink:#111827; --sub:#6b7280; --pri:#2563eb; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#f3f4f6; color:var(--ink); font:14px/1.6 "Microsoft YaHei",system-ui,sans-serif; }
+  header { background:#fff; border-bottom:1px solid var(--line); padding:16px 24px; }
+  header h1 { margin:0; font-size:18px; }
+  header p { margin:4px 0 0; color:var(--sub); font-size:12px; }
+  main { max-width:940px; margin:20px auto 80px; padding:0 16px; }
+  section { background:#fff; border:1px solid var(--line); border-radius:8px; margin-bottom:16px; }
+  section > h2 { font-size:15px; margin:0; padding:12px 18px; border-bottom:1px solid var(--line); background:#fafafa;
+                 border-radius:8px 8px 0 0; }
+  section > h2 small { color:var(--sub); font-weight:400; margin-left:8px; }
+  .body { padding:6px 18px 18px; }
+  .fi { display:flex; align-items:flex-start; padding:9px 0; border-bottom:1px dashed #f1f5f9; }
+  .fi:last-child { border-bottom:0; }
+  .fi > label, .fi > .lbl { width:132px; flex:0 0 132px; color:#374151; padding-top:6px; font-size:13px; }
+  .req { color:#dc2626; margin-left:2px; }
+  .ctl { flex:1; min-width:0; }
+  input[type=text], input[type=date], input[type=month], input[type=email], select, textarea {
+    width:100%; max-width:420px; padding:7px 10px; border:1px solid #d1d5db; border-radius:4px;
+    font:inherit; color:inherit; background:#fff; }
+  textarea { max-width:100%; min-height:70px; resize:vertical; }
+  input:focus, select:focus, textarea:focus { outline:2px solid #bfdbfe; border-color:var(--pri); }
+  .hint { color:var(--sub); font-size:12px; margin-left:8px; }
+  .radio-row { display:flex; gap:18px; padding-top:5px; }
+  .radio-row label { display:flex; align-items:center; gap:5px; width:auto; flex:none; padding:0; font-size:13px; }
+  table.edu { width:100%; border-collapse:collapse; }
+  table.edu th, table.edu td { border:1px solid var(--line); padding:8px; text-align:left; font-size:13px; vertical-align:top; }
+  table.edu th { background:#fafafa; font-weight:600; width:132px; }
+  table.edu td input { max-width:100%; }
+  .custom-select { position:relative; max-width:420px; }
+  .custom-select .trigger { border:1px solid #d1d5db; border-radius:4px; padding:7px 10px; background:#fff; cursor:pointer;
+                            display:flex; justify-content:space-between; color:#9ca3af; }
+  .custom-select .trigger.has { color:var(--ink); }
+  .custom-select .opts { position:absolute; z-index:20; left:0; right:0; top:38px; background:#fff;
+                         border:1px solid var(--line); border-radius:4px; box-shadow:0 8px 24px rgba(0,0,0,.12);
+                         max-height:220px; overflow:auto; display:none; }
+  .custom-select.open .opts { display:block; }
+  .custom-select .opts div { padding:7px 10px; cursor:pointer; }
+  .custom-select .opts div:hover { background:#eff6ff; }
+  .proj { border:1px solid var(--line); border-radius:6px; padding:10px 14px; margin-bottom:12px; background:#fcfcfd; }
+  .proj h3 { font-size:13px; margin:0 0 6px; color:#374151; }
+  .btns { display:flex; gap:10px; justify-content:flex-end; padding:14px 18px; background:#fff;
+          border:1px solid var(--line); border-radius:8px; }
+  button { font:inherit; padding:8px 18px; border-radius:4px; border:1px solid #d1d5db; background:#fff; cursor:pointer; }
+  button.primary { background:var(--pri); border-color:var(--pri); color:#fff; }
+  .counter { color:var(--sub); font-size:12px; margin-left:8px; }
+  #log { position:fixed; right:12px; bottom:12px; max-width:320px; font:11px/1.4 monospace; color:#059669; }
+</style>
+</head>
+<body>
+<header>
+  <h1>2027 届校园招聘 · 在线简历</h1>
+  <p>本页为 <b>resume-filler</b> 的本地测试页，故意混用 label[for]、表格布局、纯 placeholder、自绘下拉和受控 input 五种写法。</p>
+</header>
+
+<main>
+  <form id="apply" autocomplete="off">
+
+    <section>
+      <h2>基本信息 <small>带 * 为必填</small></h2>
+      <div class="body">
+        <div class="fi">
+          <label for="f_name">姓名<span class="req">*</span></label>
+          <div class="ctl"><input id="f_name" name="applicantName" type="text" placeholder="请输入姓名"></div>
+        </div>
+
+        <div class="fi">
+          <span class="lbl">性别<span class="req">*</span></span>
+          <div class="ctl radio-row">
+            <label><input type="radio" name="gender" value="M"> 男</label>
+            <label><input type="radio" name="gender" value="F"> 女</label>
+          </div>
+        </div>
+
+        <div class="fi">
+          <label for="f_birth">出生日期</label>
+          <div class="ctl"><input id="f_birth" name="birthday" type="date"></div>
+        </div>
+
+        <div class="fi">
+          <label for="f_phone">手机号码<span class="req">*</span></label>
+          <div class="ctl">
+            <!-- 受控组件：值存在 JS 状态里，blur 时用状态覆盖 DOM。只改 .value 不发 input 事件就会被还原 -->
+            <input id="f_phone" name="mobile" type="text" maxlength="11" placeholder="请输入手机号码">
+            <span class="counter" id="phoneState">state: (空)</span>
+          </div>
+        </div>
+
+        <div class="fi">
+          <label for="f_mail">电子邮箱<span class="req">*</span></label>
+          <div class="ctl"><input id="f_mail" name="email" type="email" placeholder="请输入邮箱"></div>
+        </div>
+
+        <div class="fi">
+          <label for="f_id">身份证号</label>
+          <div class="ctl"><input id="f_id" name="idCard" type="text" maxlength="18" placeholder="请输入身份证号码"></div>
+        </div>
+
+        <div class="fi">
+          <span class="lbl">政治面貌</span>
+          <div class="ctl">
+            <select name="political">
+              <option value="">请选择</option>
+              <option>中共党员</option>
+              <option>中共预备党员</option>
+              <option>共青团员</option>
+              <option>群众</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fi">
+          <span class="lbl">民族</span>
+          <div class="ctl">
+            <select name="ethnicity">
+              <option value="">请选择</option>
+              <option>汉族</option>
+              <option>回族</option>
+              <option>满族</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fi">
+          <!-- 只有 placeholder 的字段，靠 placeholder 猜标签 -->
+          <span class="lbl"></span>
+          <div class="ctl"><input type="text" name="nativePlace" placeholder="请输入籍贯" style="max-width:260px"></div>
+        </div>
+
+        <div class="fi">
+          <label for="f_addr">通讯地址</label>
+          <div class="ctl"><input id="f_addr" name="address" type="text" placeholder="请输入详细通讯地址"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>教育背景</h2>
+      <table class="edu">
+        <tr>
+          <th>毕业院校<span class="req">*</span></th>
+          <td><input name="school" type="text"></td>
+        </tr>
+        <tr>
+          <th>所在学院</th>
+          <td><input name="college" type="text"></td>
+        </tr>
+        <tr>
+          <th>专业名称<span class="req">*</span></th>
+          <td><input name="major" type="text"></td>
+        </tr>
+        <tr>
+          <th>最高学历<span class="req">*</span></th>
+          <td>
+            <select name="degree">
+              <option value="">请选择</option>
+              <option>大专</option>
+              <option>本科</option>
+              <option>硕士研究生</option>
+              <option>博士研究生</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>学位</th>
+          <td>
+            <select name="degreeAward">
+              <option value="">请选择</option>
+              <option>学士</option>
+              <option>硕士</option>
+              <option>博士</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>入学时间</th>
+          <td><input name="eduStart" type="month"></td>
+        </tr>
+        <tr>
+          <th>预计毕业时间</th>
+          <td><input name="eduEnd" type="month"></td>
+        </tr>
+        <tr>
+          <th>GPA / 成绩</th>
+          <td><input name="gpa" type="text" placeholder="如 3.6/4.0"></td>
+        </tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>求职意向</h2>
+      <div class="body">
+        <div class="fi">
+          <span class="lbl">应聘岗位<span class="req">*</span></span>
+          <div class="ctl">
+            <!-- 自绘下拉：没有原生 select，必须点开再点选项 -->
+            <div class="custom-select" id="csPost">
+              <div class="trigger" role="combobox" aria-haspopup="listbox">请选择应聘岗位</div>
+              <div class="opts" role="listbox">
+                <div role="option">软件开发工程师</div>
+                <div role="option">通信技术工程师</div>
+                <div role="option">嵌入式软件工程师</div>
+                <div role="option">网络优化工程师</div>
+                <div role="option">职能管理岗</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fi">
+          <label for="f_city">期望工作地点</label>
+          <div class="ctl"><input id="f_city" name="expectCity" type="text" placeholder="请输入期望城市"></div>
+        </div>
+
+        <div class="fi">
+          <label for="f_salary">期望薪资</label>
+          <div class="ctl"><input id="f_salary" name="expectSalary" type="text" placeholder="如 8000-10000"></div>
+        </div>
+
+        <div class="fi">
+          <label for="f_avail">可到岗时间</label>
+          <div class="ctl"><input id="f_avail" name="available" type="text" placeholder="如 2027-07"></div>
+        </div>
+
+        <div class="fi">
+          <span class="lbl">是否服从调剂</span>
+          <div class="ctl radio-row">
+            <label><input type="radio" name="adjust" value="1"> 是</label>
+            <label><input type="radio" name="adjust" value="0"> 否</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>项目经历 <small>最多 3 段</small></h2>
+      <div class="body">
+        <div class="proj">
+          <h3>项目一</h3>
+          <table class="edu">
+            <tr><th>项目名称</th><td><input name="projName" type="text"></td></tr>
+            <tr><th>项目角色</th><td><input name="projRole" type="text"></td></tr>
+            <tr><th>项目描述</th><td><textarea name="projDesc" rows="3"></textarea></td></tr>
+          </table>
+        </div>
+        <div class="proj">
+          <h3>项目二</h3>
+          <table class="edu">
+            <tr><th>项目名称</th><td><input name="projName" type="text"></td></tr>
+            <tr><th>项目角色</th><td><input name="projRole" type="text"></td></tr>
+            <tr><th>项目描述</th><td><textarea name="projDesc" rows="3"></textarea></td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>自我评价</h2>
+      <div class="body">
+        <div class="fi" style="display:block">
+          <div class="ctl">
+            <textarea id="f_eval" name="selfEval" maxlength="200" rows="5" aria-label="自我评价"
+                      placeholder="请简要介绍你的专业能力、性格特点与求职动机（200 字以内）"></textarea>
+            <div class="counter"><span id="evalLen">0</span>/200</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>附件</h2>
+      <div class="body">
+        <div class="fi">
+          <label for="f_cv">简历附件</label>
+          <div class="ctl"><input id="f_cv" type="file" accept=".pdf,.doc,.docx"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>声明</h2>
+      <div class="body">
+        <div class="fi">
+          <span class="lbl"></span>
+          <div class="ctl radio-row">
+            <label><input type="checkbox" id="agree" name="agree"> 本人承诺以上信息真实有效</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="btns">
+      <button type="button" id="saveDraft">保存草稿</button>
+      <button type="button" class="primary" id="submit">提交申请</button>
+    </div>
+  </form>
+</main>
+
+<div id="log"></div>
+
+<script>
+/* ---- 受控 input：把值存在状态里，blur 时以状态为准回写 ---- */
+const state = { mobile: '' };
+const phone = document.getElementById('f_phone');
+phone.addEventListener('input', () => {
+  const v = phone.value.replace(/\D/g, '').slice(0, 11);
+  state.mobile = v;
+  if (phone.value !== v) phone.value = v;
+  document.getElementById('phoneState').textContent = 'state: ' + (v || '(空)');
+});
+phone.addEventListener('blur', () => { phone.value = state.mobile; });
+
+const evalBox = document.getElementById('f_eval');
+const evalLen = document.getElementById('evalLen');
+evalBox.addEventListener('input', () => { evalLen.textContent = evalBox.value.length; });
+
+/* ---- 自绘下拉 ---- */
+const cs = document.getElementById('csPost');
+const trigger = cs.querySelector('.trigger');
+trigger.addEventListener('click', () => cs.classList.toggle('open'));
+cs.querySelectorAll('[role=option]').forEach(o => {
+  o.addEventListener('click', () => {
+    cs.dataset.value = o.textContent.trim();
+    trigger.textContent = o.textContent.trim();
+    trigger.classList.add('has');
+    cs.classList.remove('open');
+  });
+});
+document.addEventListener('click', e => { if (!cs.contains(e.target)) cs.classList.remove('open'); });
+
+/* ---- 提交永远是假的，只记日志 ---- */
+document.getElementById('submit').addEventListener('click', () => {
+  document.getElementById('log').textContent = '⚠ 提交按钮被点了（测试页不会真的提交）';
+  console.log('[demo] SUBMIT CLICKED');
+});
+document.getElementById('saveDraft').addEventListener('click', () => {
+  document.getElementById('log').textContent = '草稿已保存（测试）';
+});
+</script>
+</body>
+</html>
