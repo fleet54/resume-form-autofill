@@ -130,7 +130,8 @@
         "户籍性质",
         "户口类别"
       ],
-      "path": "basic.hukou_type"
+      "path": "basic.hukou_type",
+      "aliases": {}
     },
     {
       "id": "native_place",
@@ -444,12 +445,13 @@
       ],
       "path": "job.target_position",
       "aliases": {
-        "软件工程师": [
-          "软件工程师",
-          "软件开发工程师",
-          "研发工程师",
-          "后端开发工程师",
-          "技术类"
+        "通信工程师": [
+          "通信工程师",
+          "通信工程",
+          "通信技术工程师",
+          "网络优化工程师",
+          "技术研发类",
+          "研发工程师"
         ]
       }
     },
@@ -477,7 +479,14 @@
         "意向工作城市",
         "期望工作地区"
       ],
-      "path": "job.expected_city"
+      "path": "job.expected_city",
+      "aliases": {
+        "株洲": [
+          "株洲",
+          "株洲市",
+          "湖南省株洲市"
+        ]
+      }
     },
     {
       "id": "expected_salary",
@@ -1284,7 +1293,8 @@
         "意向岗位",
         "期望职位"
       ],
-      "path": "job.target_position"
+      "path": "job.target_position",
+      "aliases": {}
     },
     {
       "id": "work_years",
