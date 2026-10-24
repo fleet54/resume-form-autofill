@@ -1,0 +1,6 @@
+# 图形界面本身只需要标准库（tkinter）+ websockets
+# websockets 仅用于「让软件自己开浏览器 / CDP」那条路径；只用「复制脚本」手动粘贴的话不需要它。
+websockets>=12.0
+
+# 仅开发自检脚本 _checkjs.py 需要
+# esprima>=4.0.1
