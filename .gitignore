@@ -1,0 +1,20 @@
+# 运行时产物（含你填写的真实内容，别提交）
+out/
+__pycache__/
+_js/
+_wheels/
+_tmp/
+*.pyc
+
+# 个人数据与浏览器状态
+settings.json
+.browser-profile/
+profile.bak.json
+rules.bak.json
+_demo_profile.json
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
