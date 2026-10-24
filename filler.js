@@ -842,7 +842,7 @@
     '惠州': '广东省', '台北': '台湾省',
   };
 
-  /** 「北京市海淀区」→ {prov:'北京市', city:'海淀区'}；「苏州」→ {prov:'江苏省', city:'苏州'} */
+  /** 「北京市海淀区」→ {prov:'北京市', city:'海淀区'}；「苏州」→ {prov:'江苏省', city:'苏州市'} */
   function splitProvince(raw) {
     const s = String(raw == null ? '' : raw).trim();
     for (const p of PROVINCES) if (s.indexOf(p) === 0) return { prov: p, city: s.slice(p.length) || p };
@@ -1361,7 +1361,7 @@
     clickable.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
     clickable.click();
     await T.sleep(320);
-    const shown = T.textOf(customTrigger(box) || box, 40);
+    const shown = T.textOf(box, 40);
     if (matchOptionText(shown, aliases) >= 300) return { ok: true, actual: shown };
     if (shown && T.norm(shown).indexOf(T.norm(val).slice(0, 2)) >= 0) return { ok: true, actual: shown };
     return { ok: false, reason: '点了「' + T.textOf(best, 16) + '」但框里显示「' + shown + '」' };
