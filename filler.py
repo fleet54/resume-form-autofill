@@ -46,9 +46,12 @@ except Exception:
 
 try:
     from websockets.sync.client import connect as ws_connect
-except ImportError:  # pragma: no cover
-    print("[x] 缺少 websockets。装一个：python -m pip install --user websockets", file=sys.stderr)
-    raise SystemExit(2)
+    HAS_WS = True
+except ImportError:  # 没装 websockets：复制脚本那条路照样能用，只有「自己开浏览器」用不了
+    ws_connect = None
+    HAS_WS = False
+
+WS_HINT = "缺少 websockets 模块。复制脚本这条路不受影响；要让软件自己开浏览器，请先运行：python -m pip install --user websockets"
 
 C = {"g": "\033[32m", "y": "\033[33m", "r": "\033[31m", "d": "\033[90m", "b": "\033[1m", "0": "\033[0m"}
 
@@ -92,6 +95,8 @@ def set_logger(fn):
 # --------------------------------------------------------------------------- #
 class CDP:
     def __init__(self, ws_url: str, timeout: int = 30):
+        if not HAS_WS:
+            raise RuntimeError(WS_HINT)
         self.ws_url = ws_url
         self.ws = ws_connect(ws_url, max_size=64 * 1024 * 1024, open_timeout=15, close_timeout=5)
         self.id = 0
@@ -248,6 +253,8 @@ def open_debug_browser(port: int = 9222, use_system_profile: bool = False,
     use_system_profile=True 时用你平时的那份浏览器配置（登录状态、书签都在），
     不再用项目里独立的 .browser-profile。
     """
+    if not HAS_WS:
+        raise RuntimeError(WS_HINT)
     name, exe = find_browser(browser)
     if not exe:
         raise SystemExit("没找到 Chrome/Edge，请确认已安装")
@@ -273,6 +280,8 @@ def attach_or_launch(port: int | None = None, browser: str | None = None,
 
     返回 (session, 是否新开, 端口)。
     """
+    if not HAS_WS:
+        raise RuntimeError(WS_HINT)
     found = find_devtools_port(port)
     if found:
         sess = Session()
@@ -413,6 +422,8 @@ class Session:
     # ---- 打开/连接 ---------------------------------------------------------
     def open(self, url: str | None = None, port: int | None = None, browser: str | None = None,
              headless: bool = True, profile_dir: Path | None = None):
+        if not HAS_WS:
+            raise RuntimeError(WS_HINT)
         name, exe = find_browser(browser)
         if not exe:
             raise RuntimeError("没找到 Chrome/Edge，请确认已安装")
@@ -448,6 +459,8 @@ class Session:
         return ver
 
     def connect_to(self, port: int):
+        if not HAS_WS:
+            raise RuntimeError(WS_HINT)
         if not wait_port(port, timeout=3):
             raise RuntimeError(f"{port} 端口上没有调试服务。先启动浏览器时加 --remote-debugging-port={port}")
         self.port = port
