@@ -1,0 +1,36 @@
+﻿<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>添加行测试页</title>
+<style>body{font:14px/1.7 "Microsoft YaHei",sans-serif;max-width:900px;margin:24px auto;padding:0 16px}
+.sec{margin:18px 0;padding:10px 14px;background:#f8fafc;border-radius:8px}
+.sec h3{margin:6px 0 10px;font-size:16px}
+.row{display:flex;gap:10px;margin:6px 0}
+.row label{width:120px;color:#475569;text-align:right}
+.row input{flex:1;padding:4px 8px;border:1px solid #cbd5e1;border-radius:4px}
+.add{color:#2563eb;cursor:pointer;margin-top:6px;display:inline-block}</style></head>
+<body>
+<form onsubmit="return false">
+<div class="sec" id="edu"><h3>教育经历</h3>
+  <div class="rows"><div class="row"><label>学校名称</label><input placeholder="请输入"></div>
+    <div class="row"><label>专业名称</label><input placeholder="请输入"></div></div>
+  <div class="add">+ 添加教育经历</div></div>
+<div class="sec" id="work"><h3>工作经历</h3>
+  <div class="rows"><div class="row"><label>单位名称</label><input placeholder="请输入"></div>
+    <div class="row"><label>职位名称</label><input placeholder="请输入"></div></div>
+  <div class="add">+ 添加工作经历</div></div>
+<div class="sec" id="proj"><h3>项目经历</h3>
+  <div class="rows"><div class="row"><label>项目名称</label><input placeholder="请输入"></div></div>
+  <div class="add">+ 添加项目经历</div></div>
+<div class="sec" id="award"><h3>获奖情况</h3>
+  <div class="rows"><div class="row"><label>奖项名称</label><input placeholder="请输入"></div></div>
+  <div class="add">+ 添加获奖情况</div></div>
+</form>
+<script>
+document.querySelectorAll('.add').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const sec = btn.closest('.sec');
+    const rc = sec.querySelector('.rows').children[0];
+    const copy = rc.cloneNode(true);
+    copy.querySelectorAll('input').forEach(i => i.value = '');
+    sec.querySelector('.rows').appendChild(copy);
+  });
+});
+</script></body></html>
